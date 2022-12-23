@@ -301,7 +301,7 @@ function Pilot_Vogel()
               "testword3" "wordtosub" "totalAcc" "indexInCSV" "keyPressed"]; % header for data sheet for retention task
     header_test = ["subid" "version" "nTrialsPerBehavior" "behavior" "setNum" "trialindex" ...
                        "loop_trial_index" "rt1" "keypressed1" "keyname1" "rt2" "keypressed2" "keyname2" "rt3" ...
-                   "keypressed3" "keyname3" "listname" "wordcolor"]; % header for data sheet for thought activation task
+                   "keypressed3" "keyname3" "listname" "wordcolor" "word"]; % header for data sheet for thought activation task
     output_cell = cell(nTrialsPerCondition * 3, length(header)); output_cell2 = cell(trialsPerBehavior * 6, length(header_test)); %preallocate arrays
     %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -385,6 +385,9 @@ function Pilot_Vogel()
                         Screen('Flip', mainwin);
                         break;
                     elseif keyCode(escKey)
+                         %%% write data to file
+                        output_table2 = cell2table(output_cell2, "VariableNames", header_test);
+                        writetable(output_table2, filename, 'Sheet', 2)
                         ShowCursor; fclose(outfile); Screen('CloseAll'); return
                     end
 
@@ -457,6 +460,9 @@ function Pilot_Vogel()
                             Screen('Flip', mainwin);
                             break;
                         elseif keyCode(escKey)
+                             %%% write data to file
+                            output_table2 = cell2table(output_cell2, "VariableNames", header_test);
+                            writetable(output_table2, filename, 'Sheet', 2)
                             ShowCursor; fclose(outfile); Screen('CloseAll'); return
                         end
 
@@ -472,7 +478,9 @@ function Pilot_Vogel()
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             for l = 1:trialsPerBehavior / 2 % 1-50 trials
                 %%% draw and present word
-                DrawFormattedText2(current_behavior(set_word_integer_arr(l)), 'win', mainwin, 'sx', RectWidth(screenrect) / 2, 'sy', RectHeight(screenrect) / 2, ...
+                word = current_behavior(set_word_integer_arr(l));
+
+                DrawFormattedText2(word, 'win', mainwin, 'sx', RectWidth(screenrect) / 2, 'sy', RectHeight(screenrect) / 2, ...
                 'xalign', 'center', 'yalign', 'center', 'xlayout', 'center', 'baseColor', colorList(set_color_integer_arr(l), :));
                 Screen('Flip', mainwin);
                 % now record  response
@@ -518,6 +526,9 @@ function Pilot_Vogel()
                                 Screen('Flip', mainwin);
                                 break;
                             elseif keyCode(escKey)
+                                 %%% write data to file
+                            output_table2 = cell2table(output_cell2, "VariableNames", header_test);
+                            writetable(output_table2, filename, 'Sheet', 2)
                                 ShowCursor; fclose(outfile); Screen('CloseAll'); return
                             end
 
@@ -544,10 +555,10 @@ function Pilot_Vogel()
                     wordcolor = "red";
                 else wordcolor = "blue";
                 end
-
+                
                 %%% prepare and log data
                 keyname1 = {keyname1}; keyname2 = {keyname2}; keyname3 = {keyname3}; listname = {listname}; wordcolor = {wordcolor}; % make to cell values for output in row for data logging
-                row = [subid version trialsPerBehavior j k l trial_indexTA rt1 keypressed1 keyname1 rt2 keypressed2 keyname2 rt3 keypressed3 keyname3 listname wordcolor]; % make to row
+                row = [subid version trialsPerBehavior j k l trial_indexTA rt1 keypressed1 keyname1 rt2 keypressed2 keyname2 rt3 keypressed3 keyname3 listname wordcolor word]; % make to row
                 output_cell2(trial_indexTA, :) = row; % record in row of cell variable
             end % % % end loop for 50 trials
 
