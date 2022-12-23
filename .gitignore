@@ -1,0 +1,4 @@
+# don't push data files to github
+data/*
+_data/*
+/*.asv
